@@ -51,8 +51,6 @@ Write-Output "Registry keys and values created successfully."
 
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
-A #Yes to all
-
 # Define the path to the file or folder you want to exclude
 $pathToExclude = "C:\Windows\DiagTrack\Settings"
 
